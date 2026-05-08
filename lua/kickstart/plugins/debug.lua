@@ -8,6 +8,7 @@
 
 vim.pack.add {
   'https://github.com/mfussenegger/nvim-dap',
+  'https://github.com/mfussenegger/nvim-dap-python',
   'https://github.com/rcarriga/nvim-dap-ui',
   'https://github.com/nvim-neotest/nvim-nio',
   'https://github.com/mason-org/mason.nvim',
@@ -35,13 +36,15 @@ require('mason-nvim-dap').setup {
 
   -- You can provide additional configuration to the handlers,
   -- see mason-nvim-dap README for more information
+  -- Empty function prevents the default handler adding a broken "Python Debugger: Current file"
+  -- config that references the missing debugpy adapter.
   handlers = {},
 
   -- You'll need to check that you have the required things installed
   -- online, please don't ask me how to install them :)
   ensure_installed = {
     -- Update this to ensure that you have the debuggers for the langs you want
-    'delve',
+    'delve', -- Golang
   },
 }
 
@@ -70,16 +73,16 @@ dapui.setup {
 }
 
 -- Change breakpoint icons
--- vim.api.nvim_set_hl(0, 'DapBreak', { fg = '#e51400' })
--- vim.api.nvim_set_hl(0, 'DapStop', { fg = '#ffcc00' })
--- local breakpoint_icons = vim.g.have_nerd_font
---     and { Breakpoint = '', BreakpointCondition = '', BreakpointRejected = '', LogPoint = '', Stopped = '' }
---   or { Breakpoint = '●', BreakpointCondition = '⊜', BreakpointRejected = '⊘', LogPoint = '◆', Stopped = '⭔' }
--- for type, icon in pairs(breakpoint_icons) do
---   local tp = 'Dap' .. type
---   local hl = (type == 'Stopped') and 'DapStop' or 'DapBreak'
---   vim.fn.sign_define(tp, { text = icon, texthl = hl, numhl = hl })
--- end
+vim.api.nvim_set_hl(0, 'DapBreak', { fg = '#e51400' })
+vim.api.nvim_set_hl(0, 'DapStop', { fg = '#ffcc00' })
+local breakpoint_icons = vim.g.have_nerd_font
+    and { Breakpoint = '', BreakpointCondition = '', BreakpointRejected = '', LogPoint = '', Stopped = '' }
+  or { Breakpoint = '●', BreakpointCondition = '⊜', BreakpointRejected = '⊘', LogPoint = '◆', Stopped = '⭔' }
+for type, icon in pairs(breakpoint_icons) do
+  local tp = 'Dap' .. type
+  local hl = (type == 'Stopped') and 'DapStop' or 'DapBreak'
+  vim.fn.sign_define(tp, { text = icon, texthl = hl, numhl = hl })
+end
 
 dap.listeners.after.event_initialized['dapui_config'] = dapui.open
 dap.listeners.before.event_terminated['dapui_config'] = dapui.close
@@ -91,5 +94,26 @@ require('dap-go').setup {
     -- On Windows delve must be run attached or it crashes.
     -- See https://github.com/leoluz/nvim-dap-go/blob/main/README.md#configuring
     detached = vim.fn.has 'win32' == 0,
+  },
+}
+-- Configure Python dap to use uv.
+require('dap-python').setup 'uv'
+dap.configurations.scala = {
+  {
+    type = 'scala',
+    request = 'launch',
+    name = 'RunOrTest',
+    metals = {
+      runType = 'runOrTestFile',
+      --args = { "firstArg", "secondArg", "thirdArg" }, -- here just as an example
+    },
+  },
+  {
+    type = 'scala',
+    request = 'launch',
+    name = 'Test Target',
+    metals = {
+      runType = 'testTarget',
+    },
   },
 }

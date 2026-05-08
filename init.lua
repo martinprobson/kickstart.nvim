@@ -99,7 +99,7 @@ do
   vim.g.maplocalleader = ' '
 
   -- Set to true if you have a Nerd Font installed and selected in the terminal
-  vim.g.have_nerd_font = false
+  vim.g.have_nerd_font = true
 
   -- [[ Setting options ]]
   --  See `:help vim.o`
@@ -110,7 +110,7 @@ do
   vim.o.number = true
   -- You can also add relative line numbers, to help with jumping.
   --  Experiment for yourself to see if you like it!
-  -- vim.o.relativenumber = true
+  vim.o.relativenumber = true
 
   -- Enable mouse mode, can be useful for resizing splits for example!
   vim.o.mouse = 'a'
@@ -688,7 +688,8 @@ do
   local servers = {
     -- clangd = {},
     -- gopls = {},
-    -- pyright = {},
+    basedpyright = {},
+    ruff = {},
     -- rust_analyzer = {},
     --
     -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -776,8 +777,8 @@ do
     format_on_save = function(bufnr)
       -- You can specify filetypes to autoformat on save here:
       local enabled_filetypes = {
-        -- lua = true,
-        -- python = true,
+        lua = true,
+        python = true,
       }
       if enabled_filetypes[vim.bo[bufnr].filetype] then
         return { timeout_ms = 500 }
@@ -796,6 +797,7 @@ do
       --
       -- You can use 'stop_after_first' to run the first available formatter from the list
       -- javascript = { "prettierd", "prettier", stop_after_first = true },
+      python = { 'isort', 'ruff_format' },
     },
   }
 
@@ -960,17 +962,17 @@ do
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  -- require 'kickstart.plugins.debug'
-  -- require 'kickstart.plugins.indent_line'
+  require 'kickstart.plugins.debug'
+  require 'kickstart.plugins.indent_line'
   -- require 'kickstart.plugins.lint'
-  -- require 'kickstart.plugins.autopairs'
-  -- require 'kickstart.plugins.neo-tree'
-  -- require 'kickstart.plugins.gitsigns' -- adds gitsigns recommended keymaps
+  require 'kickstart.plugins.autopairs'
+  require 'kickstart.plugins.neo-tree'
+  require 'kickstart.plugins.gitsigns' -- adds gitsigns recommended keymaps
 
   -- NOTE: You can add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- require 'custom.plugins'
+  require 'custom.plugins'
 end
 
 -- The line beneath this is called `modeline`. See `:help modeline`
