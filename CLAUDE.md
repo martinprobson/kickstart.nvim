@@ -6,11 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A personal Neovim configuration forked from [kickstart.nvim](https://github.com/nvim-lua/kickstart.nvim). It is a single-file config (`init.lua`) that uses `vim.pack`, the plugin manager built into Neovim (≥0.12).
 
-Since the config lives in `~/.config/nvim-kickstart` rather than `~/.config/nvim`, it is invoked as:
-
-```sh
-NVIM_APPNAME="nvim-kickstart" nvim
-```
+The config lives at `~/.config/nvim` and is invoked normally as `nvim`.
 
 ## Lua formatting
 
@@ -22,6 +18,8 @@ stylua --check .  # check without modifying (used by CI)
 ```
 
 StyLua settings (`.stylua.toml`): 2-space indent, 160-column width, single quotes preferred, parentheses omitted where optional, simple statements collapsed to one line.
+
+Note: the CI workflow (`stylua.yml`) contains a guard `if: github.repository == 'nvim-lua/kickstart.nvim'` and will not run on this fork — run `stylua --check .` locally before committing.
 
 ## Architecture
 
@@ -54,7 +52,13 @@ Each file is a self-contained plugin spec that can be opted-in by uncommenting i
 
 ### Custom plugins (`lua/custom/plugins/`)
 
-`lua/custom/plugins/init.lua` auto-loads every `.lua` file in that directory (except itself). Add new personal plugins by creating files there.
+`lua/custom/plugins/init.lua` auto-loads every `.lua` file in that directory (except itself). Add new personal plugins by creating files there — the pattern is `vim.pack.add { 'https://github.com/…' }` followed by plugin setup in the same file.
+
+Currently active custom plugins:
+
+- `metals.lua` — Scala/SBT/Java LSP via [nvim-metals](https://github.com/scalameta/nvim-metals); attaches on `FileType scala,sbt,java` and sets up DAP
+- `better-escape.lua` — maps `jj` to `<C-\><C-n>` in terminal mode (insert-mode escape uses plugin defaults)
+- `vimwiki.lua` — [VimWiki](https://github.com/vimwiki/vimwiki) with markdown syntax; wiki stored at `~/vimwiki/`
 
 ## Plugin management
 
