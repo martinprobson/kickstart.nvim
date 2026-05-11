@@ -27,28 +27,31 @@ Note: the CI workflow (`stylua.yml`) contains a guard `if: github.repository == 
 
 The file is divided into nine numbered `do … end` blocks, one per concern:
 
-| Section | Contents |
-|---------|----------|
-| 1 | Options, leader (`<Space>`), basic keymaps, autocmds |
-| 2 | `vim.pack` intro; `PackChanged` build hooks for `telescope-fzf-native`, `LuaSnip`, `nvim-treesitter` |
-| 3 | UI plugins: guess-indent, gitsigns, which-key, tokyonight, todo-comments, mini.nvim (ai, surround, statusline) |
-| 4 | Telescope + fzf-native; `<leader>s*` search keymaps; LSP picker keymaps wired on `LspAttach` |
-| 5 | LSP: fidget, nvim-lspconfig, Mason, mason-lspconfig, mason-tool-installer; server table (`servers`) |
-| 6 | conform.nvim formatting; `<leader>f` keymap |
-| 7 | LuaSnip (pinned `2.*`) + blink.cmp (pinned `1.*`) autocomplete |
-| 8 | nvim-treesitter (branch `main`); auto-install parsers on `FileType` |
-| 9 | `require` calls for optional kickstart plugins and custom plugins |
+| Section | Name | Contents |
+|---------|------|----------|
+| 1 | FOUNDATION | Options, leader (`<Space>`), basic keymaps, autocmds |
+| 2 | PLUGIN MANAGER INTRO | `vim.pack` intro; `PackChanged` build hooks for `telescope-fzf-native`, `LuaSnip`, `nvim-treesitter` |
+| 3 | UI / CORE UX PLUGINS | guess-indent, gitsigns, which-key, tokyonight, todo-comments, mini.nvim (ai, surround, statusline) |
+| 4 | SEARCH & NAVIGATION | Telescope + fzf-native; `<leader>s*` search keymaps; LSP picker keymaps wired on `LspAttach` |
+| 5 | LSP | fidget, nvim-lspconfig, Mason, mason-lspconfig, mason-tool-installer; server table (`servers`) |
+| 6 | FORMATTING | conform.nvim formatting; `<leader>f` keymap |
+| 7 | AUTOCOMPLETE & SNIPPETS | LuaSnip (pinned `2.*`) + blink.cmp (pinned `1.*`) |
+| 8 | TREESITTER | nvim-treesitter (branch `main`); auto-install parsers on `FileType` |
+| 9 | OPTIONAL EXAMPLES / NEXT STEPS | `require` calls for optional kickstart plugins and custom plugins |
 
 ### Optional plugins (`lua/kickstart/plugins/`)
 
-Each file is a self-contained plugin spec that can be opted-in by uncommenting its `require` line in Section 9:
+Each file is a self-contained plugin spec toggled by its `require` line in Section 9. Currently **active** (uncommented):
 
 - `debug.lua` — DAP debugging
 - `indent_line.lua` — indent guides
-- `lint.lua` — nvim-lint
 - `autopairs.lua` — auto-pairs
-- `neo-tree.lua` — file explorer (currently **active**)
+- `neo-tree.lua` — file explorer
 - `gitsigns.lua` — extended gitsigns keymaps (gitsigns itself is always loaded in Section 3)
+
+Currently **inactive** (commented out):
+
+- `lint.lua` — nvim-lint
 
 ### Custom plugins (`lua/custom/plugins/`)
 
@@ -62,7 +65,7 @@ Currently active custom plugins:
 
 ## Plugin management
 
-`vim.pack` is the built-in manager. Common commands run inside Neovim:
+`vim.pack` is the built-in manager. Pinned versions are tracked in `nvim-pack-lock.json`. Common commands run inside Neovim:
 
 ```vim
 :lua vim.pack.update(nil, { offline = true })   " inspect state / pending updates
@@ -74,9 +77,10 @@ Currently active custom plugins:
 
 ```vim
 :checkhealth kickstart
+:help kickstart
 ```
 
-Checks Neovim version (≥0.12 required) and external executables (`git`, `make`, `unzip`, `rg`).
+`:checkhealth kickstart` (defined in `lua/kickstart/health.lua`) verifies Neovim version (≥0.12 required) and external executables (`git`, `make`, `unzip`, `rg`). `:help kickstart` opens the bundled help at `doc/kickstart.txt`.
 
 ## Adding an LSP server
 
