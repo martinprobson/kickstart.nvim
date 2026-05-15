@@ -399,7 +399,7 @@ do
 
   -- Highlight todo, notes, etc in comments
   vim.pack.add { gh 'folke/todo-comments.nvim' }
-  require('todo-comments').setup { signs = false }
+  require('todo-comments').setup { signs = true }
 
   -- [[ mini.nvim ]]
   --  A collection of various small independent plugins/modules
