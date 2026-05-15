@@ -88,6 +88,7 @@ P.S. You can delete this when you're done too. It's your config now! :)
 -- SECTION 1: FOUNDATION
 -- Core Neovim settings, leaders, options, basic keymaps, basic autocmds
 -- ============================================================
+if vim.g.vscode then return end
 do
   -- Enable faster startup by caching compiled Lua modules
   vim.loader.enable()
